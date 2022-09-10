@@ -9,6 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    var digits = UILabel()
     var firstLine = ["AC", "±", "÷", "%"]
     var secondLine = ["7", "8", "9", "×"]
     var thirdLine = ["4", "5", "6", "-"]
@@ -19,6 +20,18 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.addSubview(digits)
+        digits.text = "0"
+        digits.textColor = UIColor.black
+        digits.textAlignment = .right
+        digits.font = .systemFont(ofSize: 100)
+        
+        digits.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            digits.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 190),
+            digits.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+        ])
+        
         let stackView1 = UIStackView(arrangedSubviews: firstLine.map { makeButton(with: $0) })
         stackView1.spacing = 6
         stackView1.translatesAutoresizingMaskIntoConstraints = false
@@ -26,7 +39,7 @@ class ViewController: UIViewController {
         view.addSubview(stackView1)
         
         NSLayoutConstraint.activate([
-//       stackView1.topAnchor.constraint(equalTo: view.topAnchor, constant: 360),
+            stackView1.topAnchor.constraint(equalTo: digits.bottomAnchor, constant: 10),
             stackView1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             stackView1.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])

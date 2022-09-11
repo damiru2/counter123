@@ -9,27 +9,44 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    var digits = UILabel()
+    var resultLabel = UILabel()
     var firstLine = ["AC", "±", "÷", "%"]
     var secondLine = ["7", "8", "9", "×"]
     var thirdLine = ["4", "5", "6", "-"]
     var fourthLine = ["1", "2", "3", "+"]
     var fifthLine = [",", "="]
     var fifthLine1 = ["0"]
+    var stillTyping = false
+    var firstOperand: Double = 0
+    var secondOperand: Double = 0
+    var operationString: String = ""
+    var currentInput: Double {
+        get {
+            return Double(resultLabel.text!)!
+        }
+        set {
+            resultLabel.text = "\(newValue)"
+            stillTyping = false
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(digits)
-        digits.text = "0"
-        digits.textColor = UIColor.black
-        digits.textAlignment = .right
-        digits.font = .systemFont(ofSize: 100)
+        view.addSubview(resultLabel)
+        resultLabel.text = "0"
+        resultLabel.textColor = UIColor.black
+        resultLabel.textAlignment = .right
+        resultLabel.font = .systemFont(ofSize: 80)
+        resultLabel.numberOfLines = 1
+        resultLabel.adjustsFontSizeToFitWidth = true
+        resultLabel.minimumScaleFactor = 0.2
         
-        digits.translatesAutoresizingMaskIntoConstraints = false
+        
+        resultLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            digits.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 190),
-            digits.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+            resultLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 190),
+            resultLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
         
         let stackView1 = UIStackView(arrangedSubviews: firstLine.map { makeButton(with: $0) })
@@ -39,7 +56,7 @@ class ViewController: UIViewController {
         view.addSubview(stackView1)
         
         NSLayoutConstraint.activate([
-            stackView1.topAnchor.constraint(equalTo: digits.bottomAnchor, constant: 10),
+            stackView1.topAnchor.constraint(equalTo: resultLabel.bottomAnchor, constant: 10),
             stackView1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             stackView1.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
@@ -106,9 +123,11 @@ class ViewController: UIViewController {
             stackView6.trailingAnchor.constraint(equalTo: stackView5.trailingAnchor, constant: -180),
             stackView6.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40)
         ])
-        
-        
-        
+    }
+    
+    func operateWithTwoOperands(operation: (Double, Double) -> Double) {
+        currentInput = operation(firstOperand, secondOperand)
+        stillTyping = false
     }
     
     func makeButton(with meaning: String) -> UIButton {
@@ -117,9 +136,7 @@ class ViewController: UIViewController {
         button.setTitle("\(meaning)", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.setTitleColor(.gray, for: .highlighted)
-        
         button.titleLabel?.font = UIFont.systemFont(ofSize: 30)
-        
         button.backgroundColor = .lightGray
         
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -129,8 +146,33 @@ class ViewController: UIViewController {
         ])
         
         button.layer.cornerRadius = 40
-        button.layer.masksToBounds = false
+//        button.layer.masksToBounds = false
+        
+        button.addTarget(self, action: #selector(buttonAction(sender:)), for: .touchUpInside)
+        
+        
         return button
+    }
+    
+    @objc func buttonAction(sender: UIButton) {
+        let value = sender.currentTitle!
+        
+    
+        if value == "+" {
+            firstOperand = currentInput
+            stillTyping = false
+            resultLabel.text = resultLabel.text!
+            
+        } else {
+            if stillTyping {
+            if (resultLabel.text?.count)! < 10 {
+        resultLabel.text = resultLabel.text! + value
+        }
+        } else {
+            resultLabel.text = value
+            stillTyping = true
+        }
+    }
     }
 
 

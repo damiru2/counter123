@@ -146,24 +146,16 @@ class ViewController: UIViewController {
         ])
         
         button.layer.cornerRadius = 40
-//        button.layer.masksToBounds = false
-        
-        button.addTarget(self, action: #selector(buttonAction(sender:)), for: .touchUpInside)
-        
+
+        button.addTarget(self, action: #selector(numberPressed(sender:)), for: .touchUpInside)
         
         return button
     }
     
-    @objc func buttonAction(sender: UIButton) {
+    @objc func numberPressed(sender: UIButton) {
            let value = sender.currentTitle!
+        
 
-
-           if value == "+" {
-               firstOperand = currentInput
-               stillTyping = false
-               resultLabel.text = resultLabel.text!
-
-           } else {
                if stillTyping {
                if (resultLabel.text?.count)! < 10 {
            resultLabel.text = resultLabel.text! + value
@@ -173,10 +165,15 @@ class ViewController: UIViewController {
                stillTyping = true
            }
        }
+    
+   
        }
+        
+    
 
 
-}
+
+
 
 
 

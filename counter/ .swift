@@ -7,7 +7,8 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+// Старайся делать классы final, если от них никто не наследуется. Хорошая практика - меньше времени на компиляция. можешь почитать про method dispatch
+final class ViewController: UIViewController {
     
     enum Element: Int {
         case ac = 0
@@ -74,8 +75,10 @@ class ViewController: UIViewController {
         }
     }
     }
-    
+    // все переменные и константы, которые используешь только в этом классе делай приватными. почитай про принципы ООП на примерах свифта. то есть, никто не должен знать, что у тебя происходит внутри класса
     var resultLabel = UILabel()
+
+	// так же можно их сделать let, если менять не будешь
     var firstLine: [Element] = [.ac, .plusMinus, .percent, .divide]
     var secondLine: [Element] = [.seven, .eight, .nine, .multiply]
     var thirdLine: [Element] = [.four, .five, .six, .minus]
@@ -88,6 +91,7 @@ class ViewController: UIViewController {
     var operationSign: String = ""
     var dotIsPlaced = false
     var currentInput: Double {
+		// не используй force unwrap. НИКОГДА!
         get {
             return Double(resultLabel.text!)!
         }
@@ -103,6 +107,9 @@ class ViewController: UIViewController {
         }
     }
 
+	// раздели то, что внутри viewDidLoad на несколько методов
+	// например, addSubviews()
+	// setupLabel() и т.д.
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -197,7 +204,7 @@ class ViewController: UIViewController {
             stackView6.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40)
         ])
     }
-    
+    // аналогично с методами, делай их приват, если не используешь извне
     func operateWithTwoOperands(operation: (Double, Double) -> Double) {
         currentInput = operation(firstOperand, secondOperand)
         stillTyping = false
@@ -281,6 +288,7 @@ class ViewController: UIViewController {
             firstOperand = currentInput
             stillTyping = false
         case 8:
+			// force unwrap
             let number = sender.currentTitle!
              if stillTyping {
                  if (resultLabel.text?.count)! < 20 {
@@ -394,7 +402,7 @@ class ViewController: UIViewController {
        }
         
     
-
+// слишком много ненужных пустых строк
 
 
 
